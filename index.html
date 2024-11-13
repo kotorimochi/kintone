@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kintone Data Display</title>
+</head>
+<body>
+    <h1>kintone Data Display</h1>
+    <div id="data"></div>
+
+    <script>
+        const apiToken = 'YSFFXJ49p4hVBku7476VCIVKw8RVAvV1QgL3OTqF'; // セキュリティに注意
+        const kintoneAppId = '12'; // アプリID
+        const kintoneDomain = 'gpr5qyqgpz3s.cybozu.com'; // ドメイン
+        const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+        const kintoneApiUrl = `https://${kintoneDomain}/k/v1/records.json?app=${kintoneAppId}`;
+
+        async function fetchData() {
+            try {
+                const response = await fetch(proxyUrl + kintoneApiUrl, {
+                    headers: {
+                        'X-Cybozu-API-Token': apiToken
+                    }
+                });
+                const data = await response.json();
+                displayData(data.records);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        function displayData(records) {
+            const dataContainer = document.getElementById('data');
+            records.forEach(record => {
+                const recordElement = document.createElement('div');
+                recordElement.textContent = JSON.stringify(record);
+                dataContainer.appendChild(recordElement);
+            });
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>
